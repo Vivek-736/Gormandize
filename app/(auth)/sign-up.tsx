@@ -22,8 +22,6 @@ const SignUp = () => {
                 password,
                 name
             });
-
-            Alert.alert("Success", "You have successfully signed up!");
         
             router.replace('/');
 
