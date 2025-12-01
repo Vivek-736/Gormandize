@@ -2,6 +2,7 @@ import { useFonts } from "expo-font";
 import { Redirect, SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import "./globals.css";
+import { StatusBar } from "react-native";
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -24,13 +25,15 @@ export default function RootLayout() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? (
-          <Stack.Screen name="(tabs)" />
-        ) : (
-          <Stack.Screen name="(auth)" />
-        )}
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(auth)" />
       </Stack>
-      {isAuthenticated && <Redirect href="/(tabs)" />}
+      {isAuthenticated ? (
+        <Redirect href="/(tabs)" />
+      ) : (
+        <Redirect href="/(auth)/sign-in" />
+      )}
+      <StatusBar hidden />
     </>
   );
 }
