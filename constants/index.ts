@@ -1,4 +1,3 @@
-import arrowBack from "../assets/icons/arrow-back.png";
 import arrowDown from "@/assets/icons/arrow-down.png";
 import arrowRight from "@/assets/icons/arrow-right.png";
 import bag from "@/assets/icons/bag.png";
@@ -18,6 +17,7 @@ import search from "@/assets/icons/search.png";
 import star from "@/assets/icons/star.png";
 import trash from "@/assets/icons/trash.png";
 import user from "@/assets/icons/user.png";
+import arrowBack from "../assets/icons/arrow-back.png";
 
 import avatar from "@/assets/images/avatar.png";
 import avocado from "@/assets/images/avocado.png";
@@ -95,27 +95,27 @@ export const sides = [
     {
         name: "Fries",
         image: fries,
-        price: 3.5,
+        price: 129.99,
     },
     {
         name: "Onion Rings",
         image: onionRings,
-        price: 4.0,
+        price: 149.99,
     },
     {
         name: "Mozarella Sticks",
         image: mozarellaSticks,
-        price: 5.0,
+        price: 199.99,
     },
     {
         name: "Coleslaw",
         image: coleslaw,
-        price: 2.5,
+        price: 99.99,
     },
     {
         name: "Salad",
         image: salad,
-        price: 4.5,
+        price: 179.99,
     },
 ];
 
@@ -123,37 +123,37 @@ export const toppings = [
     {
         name: "Avocado",
         image: avocado,
-        price: 1.5,
+        price: 59.99,
     },
     {
         name: "Bacon",
         image: bacon,
-        price: 2.0,
+        price: 79.99,
     },
     {
         name: "Cheese",
         image: cheese,
-        price: 1.0,
+        price: 49.99,
     },
     {
         name: "Cucumber",
         image: cucumber,
-        price: 0.5,
+        price: 29.99,
     },
     {
         name: "Mushrooms",
         image: mushrooms,
-        price: 1.2,
+        price: 69.99,
     },
     {
         name: "Onions",
         image: onions,
-        price: 0.5,
+        price: 24.99,
     },
     {
         name: "Tomatoes",
         image: tomatoes,
-        price: 0.7,
+        price: 34.99,
     },
 ];
 
