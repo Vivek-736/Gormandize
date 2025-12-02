@@ -163,6 +163,7 @@ const ProductDetail = () => {
     return (
         <SafeAreaView className='flex-1 bg-white'>
             <ScrollView showsVerticalScrollIndicator={false}>
+                {/* Header */}
                 <View className='px-5 py-4 flex-row items-center justify-between'>
                     <TouchableOpacity onPress={() => router.back()}>
                         <Image 
@@ -171,7 +172,7 @@ const ProductDetail = () => {
                             resizeMode='contain'
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/(tabs)/search')}>
                         <Image 
                             source={images.search}
                             className='size-6'
@@ -180,47 +181,65 @@ const ProductDetail = () => {
                     </TouchableOpacity>
                 </View>
 
-                <View className='px-5'>
-                    <Text className='h3-bold text-dark-100'>{product.name}</Text>
-                    <Text className='body-regular text-gray-100 mt-1'>{product.description}</Text>
+                {/* Product Info Section - Left and Right Layout */}
+                <View className='px-5 flex-row gap-4'>
+                    {/* Left Side - Details */}
+                    <View className='flex-1'>
+                        <Text className='h3-bold text-dark-100' numberOfLines={2}>{product.name}</Text>
+                        <Text className='body-regular text-gray-100 mt-1' numberOfLines={2}>{product.description}</Text>
 
-                    <View className='flex-row items-center mt-3 gap-1'>
-                        {[...Array(5)].map((_, i) => (
-                            <Image 
-                                key={i}
-                                source={images.star}
-                                className='size-4'
-                                tintColor={i < Math.floor(product.rating) ? '#FE8C00' : '#D1D5DB'}
-                            />
-                        ))}
-                        <Text className='body-medium text-dark-100 ml-1'>
-                            {product.rating}/5
-                        </Text>
-                    </View>
-
-                    <Text className='h3-bold text-primary mt-4'>
-                        ${product.price}
-                    </Text>
-
-                    <View className='flex-row gap-8 mt-4'>
-                        <View>
-                            <Text className='small-bold text-gray-100'>Calories</Text>
-                            <Text className='paragraph-semibold text-dark-100'>{product.calories} Cal</Text>
+                        {/* Rating */}
+                        <View className='flex-row items-center mt-3 gap-1'>
+                            {[...Array(5)].map((_, i) => (
+                                <Image 
+                                    key={i}
+                                    source={images.star}
+                                    className='size-4'
+                                    tintColor={i < Math.floor(product.rating) ? '#FE8C00' : '#D1D5DB'}
+                                />
+                            ))}
+                            <Text className='body-medium text-dark-100 ml-1'>
+                                {product.rating}/5
+                            </Text>
                         </View>
-                        <View>
-                            <Text className='small-bold text-gray-100'>Protein</Text>
-                            <Text className='paragraph-semibold text-dark-100'>{product.protein}g</Text>
+
+                        {/* Price */}
+                        <Text className='h3-bold text-primary mt-3'>${product.price}</Text>
+
+                        {/* Nutritional Info */}
+                        <View className='flex-row gap-6 mt-3'>
+                            <View>
+                                <Text className='small-bold text-gray-100'>Calories</Text>
+                                <Text className='paragraph-medium text-dark-100'>{product.calories} Cal</Text>
+                            </View>
+                            <View>
+                                <Text className='small-bold text-gray-100'>Protein</Text>
+                                <Text className='paragraph-medium text-dark-100'>{product.protein}g</Text>
+                            </View>
+                        </View>
+
+                        {/* Bun Type */}
+                        <View className='mt-3'>
+                            <Text className='small-bold text-gray-100'>Bun Type</Text>
+                            <Text className='paragraph-medium text-dark-100'>Whole Wheat</Text>
                         </View>
                     </View>
 
-                    <View className='mt-4'>
-                        <Text className='small-bold text-gray-100'>Bun Type</Text>
-                        <Text className='paragraph-medium text-dark-100'>Whole Wheat</Text>
+                    {/* Right Side - Product Image */}
+                    <View className='w-40 h-40 flex-center'>
+                        <Image 
+                            source={{ uri: product.image_url }}
+                            className='w-full h-full'
+                            resizeMode='contain'
+                        />
                     </View>
+                </View>
 
-                    <View className='flex-row items-center gap-6 mt-6 pb-6 border-b border-gray-200'>
+                {/* Delivery Info */}
+                <View className='px-5 mt-6'>
+                    <View className='flex-row items-center gap-6 pb-4 border-b border-gray-200'>
                         <View className='flex-row items-center gap-2'>
-                            <Text className='text-xl'>🚚</Text>
+                            <Text className='text-lg'>🚚</Text>
                             <Text className='small-bold text-dark-100'>Free Delivery</Text>
                         </View>
                         <View className='flex-row items-center gap-2'>
@@ -232,83 +251,77 @@ const ProductDetail = () => {
                             <Text className='small-bold text-dark-100'>{product.rating}</Text>
                         </View>
                     </View>
-
-                    <View className='flex-center my-6'>
-                        <Image 
-                            source={{ uri: product.image_url }}
-                            className='size-64'
-                            resizeMode='contain'
-                        />
-                    </View>
-
-                    <Text className='body-regular text-gray-100 leading-6 mb-6'>
-                        {product.description}. Made with premium ingredients and served fresh to ensure the best taste and quality.
-                    </Text>
-
-                    {toppings.length > 0 && (
-                        <View className='mb-6'>
-                            <Text className='paragraph-bold text-dark-100 mb-4'>Toppings</Text>
-                            <View className='flex-row flex-wrap gap-3'>
-                                {toppings.map((topping) => (
-                                    <TouchableOpacity
-                                        key={topping.$id}
-                                        onPress={() => toggleTopping(topping.$id)}
-                                        className='relative'
-                                    >
-                                        <View className='w-20 bg-gray-100/20 rounded-2xl p-3 items-center'>
-                                            <View className='size-12 bg-white rounded-full flex-center mb-2'>
-                                                <Text className='text-2xl'>🧀</Text>
-                                            </View>
-                                            <View className='bg-dark-100 rounded-md px-2 py-1 absolute bottom-2'>
-                                                <Text className='text-white text-xs font-quicksand-medium'>
-                                                    {topping.name}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        {selectedToppings.includes(topping.$id) && (
-                                            <View className='absolute -top-1 -right-1 bg-primary size-5 rounded-full flex-center'>
-                                                <Image source={images.check} className='size-3' tintColor='#fff' />
-                                            </View>
-                                        )}
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </View>
-                    )}
-
-                    {sides.length > 0 && (
-                        <View className='mb-6'>
-                            <Text className='paragraph-bold text-dark-100 mb-4'>Side options</Text>
-                            <View className='flex-row flex-wrap gap-3'>
-                                {sides.map((side) => (
-                                    <TouchableOpacity
-                                        key={side.$id}
-                                        onPress={() => toggleSide(side.$id)}
-                                        className='relative'
-                                    >
-                                        <View className='w-20 bg-gray-100/20 rounded-2xl p-3 items-center'>
-                                            <View className='size-12 bg-white rounded-full flex-center mb-2'>
-                                                <Text className='text-2xl'>🍟</Text>
-                                            </View>
-                                            <View className='bg-dark-100 rounded-md px-2 py-1 absolute bottom-2'>
-                                                <Text className='text-white text-xs font-quicksand-medium'>
-                                                    {side.name}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        {selectedSides.includes(side.$id) && (
-                                            <View className='absolute -top-1 -right-1 bg-primary size-5 rounded-full flex-center'>
-                                                <Image source={images.check} className='size-3' tintColor='#fff' />
-                                            </View>
-                                        )}
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </View>
-                    )}
                 </View>
+
+                {/* Description */}
+                <View className='px-5 mt-6'>
+                    <Text className='body-regular text-gray-100 leading-6'>
+                        The {product.name} is a {product.description.toLowerCase()}. Made with premium ingredients and served fresh to ensure the best taste and quality. Perfect for any meal!
+                    </Text>
+                </View>
+
+                {/* Toppings */}
+                {toppings.length > 0 && (
+                    <View className='px-5 mt-6'>
+                        <Text className='paragraph-bold text-dark-100 mb-4'>Toppings</Text>
+                        <View className='flex-row flex-wrap gap-3'>
+                            {toppings.map((topping) => (
+                                <TouchableOpacity
+                                    key={topping.$id}
+                                    onPress={() => toggleTopping(topping.$id)}
+                                    className='relative'
+                                >
+                                    <View className='w-20 bg-gray-100/20 rounded-2xl p-2 items-center justify-center h-20'>
+                                        <View className='size-10 bg-white rounded-full flex-center mb-1'>
+                                            <Text className='text-xl'>🧀</Text>
+                                        </View>
+                                        <Text className='text-[10px] font-quicksand-medium text-dark-100 text-center' numberOfLines={1}>
+                                            {topping.name}
+                                        </Text>
+                                    </View>
+                                    {selectedToppings.includes(topping.$id) && (
+                                        <View className='absolute -top-1 -right-1 bg-primary size-5 rounded-full flex-center'>
+                                            <Image source={images.check} className='size-3' tintColor='#fff' />
+                                        </View>
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                )}
+
+                {/* Side Options */}
+                {sides.length > 0 && (
+                    <View className='px-5 mt-6 mb-6'>
+                        <Text className='paragraph-bold text-dark-100 mb-4'>Side options</Text>
+                        <View className='flex-row flex-wrap gap-3'>
+                            {sides.map((side) => (
+                                <TouchableOpacity
+                                    key={side.$id}
+                                    onPress={() => toggleSide(side.$id)}
+                                    className='relative'
+                                >
+                                    <View className='w-20 bg-gray-100/20 rounded-2xl p-2 items-center justify-center h-20'>
+                                        <View className='size-10 bg-white rounded-full flex-center mb-1'>
+                                            <Text className='text-xl'>🍟</Text>
+                                        </View>
+                                        <Text className='text-[10px] font-quicksand-medium text-dark-100 text-center' numberOfLines={1}>
+                                            {side.name}
+                                        </Text>
+                                    </View>
+                                    {selectedSides.includes(side.$id) && (
+                                        <View className='absolute -top-1 -right-1 bg-primary size-5 rounded-full flex-center'>
+                                            <Image source={images.check} className='size-3' tintColor='#fff' />
+                                        </View>
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                )}
             </ScrollView>
 
+            {/* Bottom Bar */}
             <View className='px-5 py-4 bg-white border-t border-gray-200 flex-row items-center justify-between'>
                 <View className='flex-row items-center gap-3'>
                     <TouchableOpacity 
@@ -328,7 +341,7 @@ const ProductDetail = () => {
 
                 <TouchableOpacity 
                     onPress={handleAddToCart}
-                    className='bg-primary rounded-full px-8 py-3 flex-row items-center gap-2'
+                    className='bg-primary rounded-full px-6 py-3 flex-row items-center gap-2'
                 >
                     <Image source={images.bag} className='size-5' tintColor='#fff' />
                     <Text className='paragraph-semibold text-white'>
