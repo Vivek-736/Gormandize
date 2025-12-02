@@ -7,7 +7,8 @@ export const appwriteConfig = {
     platform: "com.vivek.gormandize",
     databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID || "692dc3a20017e9cc0cbd",
     userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID || "user",
-    categoriesCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID || "categories"
+    categoriesCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID || "categories",
+    menuCollectionId: process.env.EXPO_PUBLIC_APPWRITE_MENU_COLLECTION_ID || "menu",
 }
 
 export const client = new Client();
@@ -94,6 +95,7 @@ export const signIn = async ({ email, password }: SignInParams) => {
             type: e?.type,
             response: e?.response
         });
+        
         throw new Error(e?.message || e?.toString() || "Failed to sign in");
     }
 }
@@ -109,12 +111,6 @@ export const getCurrentUser = async () => {
         const accountPromise = account.get();
         
         const currentAccount = await Promise.race([accountPromise, timeoutPromise]) as any;
-        
-        console.log("Current account found:", {
-            id: currentAccount.$id,
-            email: currentAccount.email,
-            name: currentAccount.name
-        });
 
         if(!currentAccount) {
             console.log("No account returned");
@@ -122,7 +118,7 @@ export const getCurrentUser = async () => {
         }
 
         console.log("Fetching user document from database...");
-        
+
         const currentUser = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
