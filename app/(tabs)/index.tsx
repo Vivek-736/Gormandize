@@ -70,7 +70,7 @@ export default function Index() {
               <Text className="small-bold text-primary">DELIVER TO</Text>
               <TouchableOpacity className="flex-center flex-row gap-x-1 mt-0.5">
                 <Text className="paragraph-bold text-dark-100">
-                  Vizag, Andhra Pradesh, India
+                  Andhra Pradesh, India
                 </Text>
                 
                 <Image
