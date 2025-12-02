@@ -10,6 +10,7 @@ export const appwriteConfig = {
     categoriesCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID || "categories",
     menuCollectionId: process.env.EXPO_PUBLIC_APPWRITE_MENU_COLLECTION_ID || "menu",
     customizationsCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CUSTOMIZATIONS_COLLECTION_ID || "customizations",
+    menuCustomizationsCollectionId: process.env.EXPO_PUBLIC_APPWRITE_MENU_CUSTOMIZATIONS_COLLECTION_ID || "menu_customizations",
 }
 
 export const client = new Client();
@@ -96,6 +97,7 @@ export const signIn = async ({ email, password }: SignInParams) => {
             type: e?.type,
             response: e?.response
         });
+
         throw new Error(e?.message || e?.toString() || "Failed to sign in");
     }
 }
