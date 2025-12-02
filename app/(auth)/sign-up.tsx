@@ -56,6 +56,7 @@ const SignUp = () => {
                 value={form.name}
                 onChangeText={(text) => setForm((prev) => ({ ...prev, name: text }))}
                 label={"Name"}
+                editable={!isSubmitting}
             />
             <CustomInput
                 placeholder='Enter your email'
@@ -63,6 +64,7 @@ const SignUp = () => {
                 onChangeText={(text) => setForm((prev) => ({ ...prev, email: text }))}
                 label={"Email"}
                 keyboardType='email-address'
+                editable={!isSubmitting}
             />
             <CustomInput
                 placeholder='Enter your password'
@@ -70,6 +72,7 @@ const SignUp = () => {
                 onChangeText={(text) => setForm((prev) => ({ ...prev, password: text }))}
                 label={"Password"}
                 secureTextEntry
+                editable={!isSubmitting}
             />
             
             <CustomButton 

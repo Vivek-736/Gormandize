@@ -39,7 +39,9 @@ const Profile = () => {
     if (!user) {
         return (
             <SafeAreaView className='flex-1 bg-white flex-center'>
-                <Text className='paragraph-medium text-gray-100'>No user data available</Text>
+                <Text className='paragraph-medium text-gray-100'>
+                    No user data available
+                </Text>
             </SafeAreaView>
         )
     }
@@ -61,7 +63,7 @@ const Profile = () => {
                     <View className='profile-avatar'>
                         <Image 
                             source={{ uri: user.avatar }}
-                            className='size-full rounded-full'
+                            className='size-full rounded-full border-4 border-black bg-orange-600'
                             resizeMode='cover'
                         />
                         <TouchableOpacity className='profile-edit'>

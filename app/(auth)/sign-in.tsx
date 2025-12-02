@@ -25,7 +25,7 @@ const SignIn = () => {
             await fetchAuthenticatedUser();
 
             console.log("Sign in complete, redirecting...");
-            
+
             router.replace('/');
         } catch (error: any) {
             console.error("Sign in error:", error);
@@ -45,6 +45,7 @@ const SignIn = () => {
                 onChangeText={(text) => setForm((prev) => ({ ...prev, email: text }))}
                 label={"Email"}
                 keyboardType='email-address'
+                editable={!isSubmitting}
             />
             <CustomInput
                 placeholder='Enter your password'
@@ -52,6 +53,7 @@ const SignIn = () => {
                 onChangeText={(text) => setForm((prev) => ({ ...prev, password: text }))}
                 label={"Password"}
                 secureTextEntry
+                editable={!isSubmitting}
             />
             
             <CustomButton 
