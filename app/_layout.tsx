@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import useAuthStore from "@/store/auth.store";
 import * as Sentry from '@sentry/react-native';
 import { useFonts } from "expo-font";
@@ -39,7 +40,7 @@ export default Sentry.wrap(function RootLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!fontsLoaded || isLoading) return null;
+  if (!fontsLoaded || isLoading) return <Loading />;
 
   return (
     <>
