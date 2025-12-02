@@ -121,7 +121,7 @@ const Profile = () => {
                         </View>
                         <View className='flex-1'>
                             <Text className='small-bold text-gray-100'>Location</Text>
-                            <Text className='paragraph-medium text-dark-100 mt-0.5'>Hyderabad, India</Text>
+                            <Text className='paragraph-medium text-dark-100 mt-0.5'>New Delhi, India</Text>
                         </View>
                     </View>
                 </View>
