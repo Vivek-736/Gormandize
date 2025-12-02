@@ -41,6 +41,7 @@ const useAuthStore = create<AuthState>((set) => ({
             set({ isAuthenticated: false, user: null })
         } finally {
             const state = useAuthStore.getState();
+            
             console.log("Fetch authenticated user completed. Final state:", {
                 isAuthenticated: state.isAuthenticated,
                 hasUser: !!state.user,
