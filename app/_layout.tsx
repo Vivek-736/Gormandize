@@ -1,10 +1,10 @@
+import useAuthStore from "@/store/auth.store";
+import * as Sentry from '@sentry/react-native';
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import "./globals.css";
 import { StatusBar } from "react-native";
-import * as Sentry from '@sentry/react-native';
-import useAuthStore from "@/store/auth.store";
+import "./globals.css";
 
 Sentry.init({
   dsn: 'https://58434f8388c2a80da12129e83637ce29@o4509367166763012.ingest.de.sentry.io/4509367168663632',
@@ -43,7 +43,11 @@ export default Sentry.wrap(function RootLayout() {
 
   return (
     <>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      </Stack>
       <StatusBar hidden />
     </>
   );

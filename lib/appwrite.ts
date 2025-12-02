@@ -69,32 +69,86 @@ export const createUser = async ({ email, password, name }: CreateUserPrams) => 
 
 export const signIn = async ({ email, password }: SignInParams) => {
     try {
-        const session = await account.createEmailPasswordSession(email, password);
+        console.log("Signing in user:", email);
+        
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Sign in request timed out")), 15000)
+        );
+        
+        const signInPromise = account.createEmailPasswordSession(email, password);
+        
+        const session = await Promise.race([signInPromise, timeoutPromise]) as any;
+        
+        console.log("Sign in session created successfully");
         return session;
     } catch (e: any) {
-        console.error("Sign in error:", e);
+        console.error("Sign in error:", {
+            message: e?.message,
+            code: e?.code,
+            type: e?.type
+        });
         throw new Error(e?.message || e?.toString() || "Failed to sign in");
     }
 }
 
 export const getCurrentUser = async () => {
     try {
-        const currentAccount = await account.get();
+        console.log("Getting current account...");
+        
+        // Increase timeout for slower network conditions on app reload
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Request timed out")), 20000)
+        );
+        
+        const accountPromise = account.get();
+        
+        const currentAccount = await Promise.race([accountPromise, timeoutPromise]) as any;
+        
+        console.log("Current account found:", {
+            id: currentAccount.$id,
+            email: currentAccount.email,
+            name: currentAccount.name
+        });
 
-        if(!currentAccount) throw Error;
+        if(!currentAccount) {
+            console.log("No account returned");
+            return null;
+        }
 
+        console.log("Fetching user document from database...");
         const currentUser = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
             [Query.equal('accountId', currentAccount.$id)]
         )
 
-        if(!currentUser) throw Error;
+        console.log("User documents found:", currentUser.documents.length);
 
-        return currentUser.documents[0];
+        if(!currentUser || currentUser.documents.length === 0) {
+            console.log("No user document found in database");
+            return null;
+        }
+
+        const user = currentUser.documents[0];
+        console.log("User retrieved successfully:", {
+            name: user.name,
+            email: user.email,
+            id: user.$id
+        });
+
+        return user;
     } catch (e: any) {
-        console.error("Get current user error:", e);
+        // Only log if it's not a timeout or auth error
+        if (e?.message !== "Request timed out" && e?.code !== 401) {
+            console.error("Get current user error:", {
+                message: e?.message,
+                code: e?.code,
+                type: e?.type
+            });
+        }
         
-        throw new Error(e as string);
+        // Return null for any auth-related errors or timeouts
+        console.log("No active session - user is not authenticated");
+        return null;
     }
 }

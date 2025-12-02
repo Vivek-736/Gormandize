@@ -18,6 +18,7 @@
         "backgroundImage": "./assets/images/logo.png",
         "monochromeImage": "./assets/images/logo.png"
       },
+      "package": "com.vivek.gormandize",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },

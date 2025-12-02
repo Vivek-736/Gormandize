@@ -1,30 +1,45 @@
 import CustomButton from '@/components/CustomButton'
 import CustomInput from '@/components/CustomInput'
 import { signIn } from '@/lib/appwrite'
+import useAuthStore from '@/store/auth.store'
+import * as Sentry from '@sentry/react-native'
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
 import { Alert, Text, View } from 'react-native'
-import * as Sentry from '@sentry/react-native'
 
 const SignIn = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({ email: '', password: '' });
+    const { fetchAuthenticatedUser } = useAuthStore();
 
     const submit = async () => {
         const { email, password } = form;
         if(!email || !password) return Alert.alert("Error", "Please enter valid email address and password");
 
         setIsSubmitting(true);
+        console.log("Starting sign in process...");
 
         try {
-            await signIn({ email, password });
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error("Request timed out. Please check your internet connection.")), 30000)
+            );
 
+            const signInProcess = async () => {
+                await signIn({ email, password });
+                console.log("Sign in successful, fetching user data...");
+                await fetchAuthenticatedUser();
+            };
+
+            await Promise.race([signInProcess(), timeoutPromise]);
+
+            console.log("Sign in complete, redirecting...");
             router.replace('/');
         } catch (error: any) {
             console.error("Sign in error:", error);
             Alert.alert("Error", error?.message || "Failed to sign in. Please try again.");
             Sentry.captureEvent(error);
         } finally {
+            console.log("Sign in process completed");
             setIsSubmitting(false);
         }
     }
