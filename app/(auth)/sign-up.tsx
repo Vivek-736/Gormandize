@@ -36,7 +36,6 @@ const SignUp = () => {
 
             console.log("User created successfully");
             
-            // Fetch the authenticated user to update the store
             await fetchAuthenticatedUser();
 
             router.replace('/');

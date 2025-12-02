@@ -70,22 +70,28 @@ export const createUser = async ({ email, password, name }: CreateUserPrams) => 
 export const signIn = async ({ email, password }: SignInParams) => {
     try {
         console.log("Signing in user:", email);
+        console.log("Using endpoint:", appwriteConfig.endpoint);
+        console.log("Project ID:", appwriteConfig.projectId);
         
-        const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error("Sign in request timed out")), 15000)
-        );
+        try {
+            console.log("Checking for existing sessions...");
+            await account.deleteSession('current');
+            console.log("Deleted existing session");
+        } catch (e) {
+            console.log("No existing session to delete", e);
+        }
         
-        const signInPromise = account.createEmailPasswordSession(email, password);
+        console.log("Creating new session...");
+        const session = await account.createEmailPasswordSession(email, password);
         
-        const session = await Promise.race([signInPromise, timeoutPromise]) as any;
-        
-        console.log("Sign in session created successfully");
+        console.log("Sign in session created successfully:", session.$id);
         return session;
     } catch (e: any) {
         console.error("Sign in error:", {
             message: e?.message,
             code: e?.code,
-            type: e?.type
+            type: e?.type,
+            response: e?.response
         });
         throw new Error(e?.message || e?.toString() || "Failed to sign in");
     }
@@ -95,7 +101,6 @@ export const getCurrentUser = async () => {
     try {
         console.log("Getting current account...");
         
-        // Increase timeout for slower network conditions on app reload
         const timeoutPromise = new Promise((_, reject) => 
             setTimeout(() => reject(new Error("Request timed out")), 20000)
         );
@@ -138,7 +143,6 @@ export const getCurrentUser = async () => {
 
         return user;
     } catch (e: any) {
-        // Only log if it's not a timeout or auth error
         if (e?.message !== "Request timed out" && e?.code !== 401) {
             console.error("Get current user error:", {
                 message: e?.message,
@@ -147,8 +151,8 @@ export const getCurrentUser = async () => {
             });
         }
         
-        // Return null for any auth-related errors or timeouts
         console.log("No active session - user is not authenticated");
+        
         return null;
     }
 }

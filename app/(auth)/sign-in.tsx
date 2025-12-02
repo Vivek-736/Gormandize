@@ -20,19 +20,12 @@ const SignIn = () => {
         console.log("Starting sign in process...");
 
         try {
-            const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error("Request timed out. Please check your internet connection.")), 30000)
-            );
-
-            const signInProcess = async () => {
-                await signIn({ email, password });
-                console.log("Sign in successful, fetching user data...");
-                await fetchAuthenticatedUser();
-            };
-
-            await Promise.race([signInProcess(), timeoutPromise]);
+            await signIn({ email, password });
+            console.log("Sign in successful, fetching user data...");
+            await fetchAuthenticatedUser();
 
             console.log("Sign in complete, redirecting...");
+            
             router.replace('/');
         } catch (error: any) {
             console.error("Sign in error:", error);
