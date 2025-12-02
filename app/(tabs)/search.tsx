@@ -58,7 +58,7 @@ const Search = () => {
                         <Filter categories={categories! as any} />
                     </View>
                 )}
-                ListEmptyComponent={() => !loading && <Text>No results</Text>}
+                ListEmptyComponent={() => !loading && <Text className='flex items-center justify-center'>No results</Text>}
             />
         </SafeAreaView>
     )
