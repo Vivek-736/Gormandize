@@ -94,7 +94,7 @@
     }
 
     .h1-bold {
-        @apply text-3xl font-quicksand-bold;
+        @apply sm:text-3xl text-2xl font-quicksand-bold;
     }
 
     .h3-bold {
