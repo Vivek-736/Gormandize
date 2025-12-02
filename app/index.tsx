@@ -28,12 +28,24 @@ export default function Index() {
     );
   }, [isAuthenticated, isLoading]);
 
-  console.log("Index - Rendering. isAuthenticated:", isAuthenticated, "isLoading:", isLoading);
+  console.log(
+    "Index - Rendering. isAuthenticated:",
+    isAuthenticated,
+    "isLoading:",
+    isLoading
+  );
 
   if (!mounted || isLoading) {
     console.log("Index - Still loading or not mounted, showing loader");
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "white",
+        }}
+      >
         <ActivityIndicator size="large" color="#0000ff" />
         <Text>Loading...</Text>
       </View>
@@ -41,7 +53,12 @@ export default function Index() {
   }
 
   const redirectPath = isAuthenticated ? "/(tabs)" : "/(auth)/sign-in";
-  console.log("Index - Redirecting to:", redirectPath, "| isAuthenticated:", isAuthenticated);
+  console.log(
+    "Index - Redirecting to:",
+    redirectPath,
+    "| isAuthenticated:",
+    isAuthenticated
+  );
 
   return <Redirect href={redirectPath} />;
 }
