@@ -50,7 +50,7 @@ const SignUp = () => {
     }
 
     return (
-        <View className='gap-6 bg-white rounded-lg py-5 mt-20'>
+        <View className='gap-6 bg-white rounded-lg py-5 mt-8'>
             <CustomInput
                 placeholder='Enter your full name'
                 value={form.name}
