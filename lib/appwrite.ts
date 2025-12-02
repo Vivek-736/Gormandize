@@ -1,13 +1,12 @@
 import { CreateUserPrams, SignInParams } from "@/type";
-import { Account, Avatars, Client, Databases, ID } from "react-native-appwrite"
+import { Account, Client, Databases, ID } from "react-native-appwrite";
 
 export const appwriteConfig = {
     endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
     projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
-    projectName: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_NAME,
     platform: "com.vivek.gormandize",
-    databaseId: "692dc3a20017e9cc0cbd",
-    userCollectionId: "user"
+    databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID || "692dc3a20017e9cc0cbd",
+    userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID || "user"
 }
 
 export const client = new Client();
@@ -19,17 +18,27 @@ client
 
 export const account = new Account(client);
 export const databases = new Databases(client);
-const avatars = new Avatars(client);
 
 export const createUser = async ({ email, password, name }: CreateUserPrams) => {
     try {
-        const newAccount = await account.create(ID.unique(), email, password, name);
+        console.log("Creating user with email:", email);
 
-        if(!newAccount) throw Error;
+        const newAccount = await account.create(ID.unique(), email, password, name);
+        console.log("Account created:", newAccount.$id);
+
+        if(!newAccount) throw new Error("Failed to create account");
+
+        console.log("Signing in...");
 
         await signIn({ email, password });
+
+        console.log("Signed in successfully");
         
-        const avatarUrl = avatars.getInitials(name);
+        const avatarUrl = `${appwriteConfig.endpoint}/avatars/initials?name=${encodeURIComponent(name)}&project=${appwriteConfig.projectId}`;
+
+        console.log("Avatar URL:", avatarUrl);
+
+        console.log("Creating database document...");
 
         const newUser = await databases.createDocument(
             appwriteConfig.databaseId,
@@ -42,17 +51,28 @@ export const createUser = async ({ email, password, name }: CreateUserPrams) => 
                 avatar: avatarUrl
             }
         )
+        
+        console.log("User document created:", newUser.$id);
 
         return newUser;
-    } catch (e) {
-        throw new Error(e as string);
+    } catch (e: any) {
+        console.error("Create user error details:", {
+            message: e?.message,
+            code: e?.code,
+            type: e?.type,
+            response: e?.response,
+            full: e
+        });
+        throw new Error(e?.message || e?.toString() || "Failed to create user");
     }
 }
 
 export const signIn = async ({ email, password }: SignInParams) => {
     try {
         const session = await account.createEmailPasswordSession(email, password);
-    } catch (e) {
-        throw new Error(e as string);
+        return session;
+    } catch (e: any) {
+        console.error("Sign in error:", e);
+        throw new Error(e?.message || e?.toString() || "Failed to sign in");
     }
 }

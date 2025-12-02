@@ -15,20 +15,30 @@ const SignUp = () => {
         if(!name || !email || !password) return Alert.alert("Error", "Please enter valid name, email address and password");
 
         setIsSubmitting(true);
+        console.log("Starting signup process...");
 
         try {
-            await createUser({
+            // Add timeout to prevent infinite loading
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error("Request timed out. Please check your internet connection.")), 30000)
+            );
+
+            const createUserPromise = createUser({
                 email,
                 password,
                 name
             });
-        
-            router.replace('/');
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            await Promise.race([createUserPromise, timeoutPromise]);
+        
+            console.log("User created successfully");
+            Alert.alert("Success", "Account created successfully!");
+            router.replace('/');
         } catch (error: any) {
-            Alert.alert("Error", "Failed to sign in. Please try again.");
+            console.error("Sign up error:", error);
+            Alert.alert("Error", error?.message || "Failed to sign up. Please try again.");
         } finally {
+            console.log("Signup process completed");
             setIsSubmitting(false);
         }
     }
