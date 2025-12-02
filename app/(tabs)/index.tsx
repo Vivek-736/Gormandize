@@ -1,4 +1,7 @@
+import CartButton from "@/components/CartButton";
 import { images, offers } from "@/constants";
+import cn from "clsx";
+import { router } from "expo-router";
 import { Fragment } from "react";
 import {
   FlatList,
@@ -9,10 +12,34 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import cn from "clsx";
-import CartButton from "@/components/CartButton";
 
 export default function Index() {
+  const handleOfferPress = (offerId: number) => {
+    let category = "";
+    
+    switch(offerId) {
+      case 1: 
+        category = "Burgers";
+        break;
+      case 2: 
+        category = "Burgers";
+        break;
+      case 3: 
+        category = "Pizzas";
+        break;
+      case 4: 
+        category = "Burritos";
+        break;
+      default:
+        category = "";
+    }
+    
+    router.push({
+      pathname: "/(tabs)/search",
+      params: { category }
+    });
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <FlatList
@@ -29,6 +56,7 @@ export default function Index() {
                 )}
                 style={{ backgroundColor: item.color }}
                 android_ripple={{ color: "#fffff22" }}
+                onPress={() => handleOfferPress(item.id)}
               >
                 {({ pressed }) => (
                   <Fragment>
