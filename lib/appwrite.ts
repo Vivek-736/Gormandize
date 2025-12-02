@@ -1,4 +1,4 @@
-import { CreateUserPrams, SignInParams } from "@/type";
+import { CreateUserPrams, GetMenuParams, SignInParams } from "@/type";
 import { Account, Client, Databases, ID, Query, Storage } from "react-native-appwrite";
 
 export const appwriteConfig = {
@@ -91,7 +91,7 @@ export const signIn = async ({ email, password }: SignInParams) => {
         const session = await account.createEmailPasswordSession(email, password);
         
         console.log("Sign in session created successfully:", session.$id);
-        
+
         return session;
     } catch (e: any) {
         console.error("Sign in error:", {
@@ -158,5 +158,39 @@ export const getCurrentUser = async () => {
         console.log("No active session - user is not authenticated");
 
         return null;
+    }
+}
+
+export const getMenu = async ({ category, query }: GetMenuParams) => {
+    try {
+        const queries: string[] = [];
+
+        if(category) queries.push(Query.equal('categories', category));
+        if(query) queries.push(Query.search('name', query));
+
+        const menus = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.menuCollectionId,
+            queries,
+        )
+
+        return menus.documents;
+    } catch (e) {
+        console.error("Get menu error:", e);
+        throw new Error("Failed to fetch menu items");
+    }
+}
+
+export const getCategories = async () => {
+    try {
+        const categories = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.categoriesCollectionId,
+        )
+
+        return categories.documents;
+    } catch (e) {
+        console.error("Get categories error:", e);
+        throw new Error(e as string);
     }
 }
