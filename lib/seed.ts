@@ -46,6 +46,7 @@ async function clearAll(collectionId: string): Promise<void> {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function clearStorage(): Promise<void> {
     const list = await storage.listFiles(appwriteConfig.bucketId);
 
@@ -57,95 +58,102 @@ async function clearStorage(): Promise<void> {
 }
 
 async function uploadImageToStorage(imageUrl: string) {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-
-    const fileObj = {
-        name: imageUrl.split("/").pop() || `file-${Date.now()}.jpg`,
-        type: blob.type,
-        size: blob.size,
-        uri: imageUrl,
-    };
-
-    const file = await storage.createFile(
-        appwriteConfig.bucketId,
-        ID.unique(),
-        fileObj
-    );
-
-    return storage.getFileViewURL(appwriteConfig.bucketId, file.$id);
+    try {
+        console.log("Using image URL directly:", imageUrl);
+        return imageUrl;
+    } catch (error) {
+        console.error("Error handling image:", error);
+        throw error;
+    }
 }
 
 async function seed(): Promise<void> {
-    await clearAll(appwriteConfig.categoriesCollectionId);
-    await clearAll(appwriteConfig.customizationsCollectionId);
-    await clearAll(appwriteConfig.menuCollectionId);
-    await clearAll(appwriteConfig.menuCustomizationsCollectionId);
-    await clearStorage();
-
-    const categoryMap: Record<string, string> = {};
-    for (const cat of data.categories) {
-        const doc = await databases.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.categoriesCollectionId,
-            ID.unique(),
-            cat
-        );
-        categoryMap[cat.name] = doc.$id;
-    }
-
-    const customizationMap: Record<string, string> = {};
-    for (const cus of data.customizations) {
-        const doc = await databases.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.customizationsCollectionId,
-            ID.unique(),
-            {
-                name: cus.name,
-                price: cus.price,
-                type: cus.type,
-            }
-        );
+    try {
+        console.log("🌱 Starting seed process...");
         
-        customizationMap[cus.name] = doc.$id;
-    }
+        console.log("Clearing collections...");
+        await clearAll(appwriteConfig.categoriesCollectionId);
+        await clearAll(appwriteConfig.customizationsCollectionId);
+        await clearAll(appwriteConfig.menuCollectionId);
+        await clearAll(appwriteConfig.menuCustomizationsCollectionId);
 
-    const menuMap: Record<string, string> = {};
-    for (const item of data.menu) {
-        const uploadedImage = await uploadImageToStorage(item.image_url);
-
-        const doc = await databases.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.menuCollectionId,
-            ID.unique(),
-            {
-                name: item.name,
-                description: item.description,
-                image_url: uploadedImage,
-                price: item.price,
-                rating: item.rating,
-                calories: item.calories,
-                protein: item.protein,
-                categories: categoryMap[item.category_name],
-            }
-        );
-
-        menuMap[item.name] = doc.$id;
-
-        for (const cusName of item.customizations) {
-            await databases.createDocument(
+        console.log("Seeding categories...");
+        const categoryMap: Record<string, string> = {};
+        for (const cat of data.categories) {
+            const doc = await databases.createDocument(
                 appwriteConfig.databaseId,
-                appwriteConfig.menuCustomizationsCollectionId,
+                appwriteConfig.categoriesCollectionId,
+                ID.unique(),
+                cat
+            );
+            categoryMap[cat.name] = doc.$id;
+            console.log(`✓ Category created: ${cat.name}`);
+        }
+
+        console.log("Seeding customizations...");
+        const customizationMap: Record<string, string> = {};
+        for (const cus of data.customizations) {
+            const doc = await databases.createDocument(
+                appwriteConfig.databaseId,
+                appwriteConfig.customizationsCollectionId,
                 ID.unique(),
                 {
-                    menu: doc.$id,
-                    customizations: customizationMap[cusName],
+                    name: cus.name,
+                    price: cus.price,
+                    type: cus.type,
                 }
             );
+            
+            customizationMap[cus.name] = doc.$id;
+            console.log(`✓ Customization created: ${cus.name}`);
         }
-    }
 
-    console.log("✅ Seeding complete.");
+        console.log("Seeding menu items...");
+        const menuMap: Record<string, string> = {};
+        for (const item of data.menu) {
+            const uploadedImage = await uploadImageToStorage(item.image_url);
+
+            const doc = await databases.createDocument(
+                appwriteConfig.databaseId,
+                appwriteConfig.menuCollectionId,
+                ID.unique(),
+                {
+                    name: item.name,
+                    description: item.description,
+                    image_url: uploadedImage,
+                    price: item.price,
+                    rating: item.rating,
+                    calories: item.calories,
+                    protein: item.protein,
+                    categories: categoryMap[item.category_name],
+                }
+            );
+
+            menuMap[item.name] = doc.$id;
+            console.log(`✓ Menu item created: ${item.name}`);
+
+            for (const cusName of item.customizations) {
+                await databases.createDocument(
+                    appwriteConfig.databaseId,
+                    appwriteConfig.menuCustomizationsCollectionId,
+                    ID.unique(),
+                    {
+                        menu: doc.$id,
+                        customizations: customizationMap[cusName],
+                    }
+                );
+            }
+        }
+        console.log("✅ Seeding complete!");
+    } catch (error: any) {
+        console.error("❌ Seeding failed:", {
+            message: error?.message,
+            code: error?.code,
+            type: error?.type,
+            response: error?.response,
+        });
+        throw error;
+    }
 }
 
 export default seed;
