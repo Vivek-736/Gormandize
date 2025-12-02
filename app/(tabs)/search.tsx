@@ -39,7 +39,7 @@ const Search = () => {
                 columnWrapperClassName="gap-7"
                 contentContainerClassName="gap-7 px-5 pb-32"
                 ListHeaderComponent={() => (
-                    <View className="my-5 gap-5">
+                    <View className="my-5 gap-5 mt-6">
                         <View className="flex-between flex-row w-full px-2">
                             <View className="flex-start">
                                 <Text className="small-bold uppercase text-primary">Search</Text>
