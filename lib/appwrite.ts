@@ -165,7 +165,17 @@ export const getMenu = async ({ category, query }: GetMenuParams) => {
     try {
         const queries: string[] = [];
 
-        if(category) queries.push(Query.equal('categories', category));
+        if(category) {
+            const categoryDocs = await databases.listDocuments(
+                appwriteConfig.databaseId,
+                appwriteConfig.categoriesCollectionId,
+                [Query.equal('name', category)]
+            );
+            
+            if(categoryDocs.documents.length > 0) {
+                queries.push(Query.equal('categories', categoryDocs.documents[0].$id));
+            }
+        }
         if(query) queries.push(Query.search('name', query));
 
         const menus = await databases.listDocuments(

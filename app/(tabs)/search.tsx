@@ -1,15 +1,16 @@
-import { FlatList, Text, View } from 'react-native'
-import { SafeAreaView } from "react-native-safe-area-context";
-import useAppwrite from "@/lib/useAppwrite";
+import CartButton from "@/components/CartButton";
+import Filter from "@/components/Filter";
+import MenuCard from "@/components/MenuCard";
+import SearchBar from "@/components/SearchBar";
+import { images } from "@/constants";
 import { getCategories, getMenu } from "@/lib/appwrite";
+import useAppwrite from "@/lib/useAppwrite";
+import { MenuItem } from "@/type";
+import cn from "clsx";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import CartButton from "@/components/CartButton";
-import cn from "clsx";
-import MenuCard from "@/components/MenuCard";
-import { MenuItem } from "@/type";
-import Filter from "@/components/Filter";
-import SearchBar from "@/components/SearchBar";
+import { FlatList, Image, Text, View } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Search = () => {
     const { category, query } = useLocalSearchParams<{query: string; category: string}>()
@@ -58,7 +59,21 @@ const Search = () => {
                         <Filter categories={categories! as any} />
                     </View>
                 )}
-                ListEmptyComponent={() => !loading && <Text className='flex items-center justify-center'>No results</Text>}
+                ListEmptyComponent={() => !loading && (
+                    <View className='flex-center py-20 px-10'>
+                        <Image 
+                            source={images.emptyState}
+                            className='size-48 mb-6'
+                            resizeMode='contain'
+                        />
+                        <Text className='h3-bold text-dark-100 text-center mb-2'>
+                            No Items Found
+                        </Text>
+                        <Text className='body-regular text-gray-100 text-center'>
+                            We couldn't find any items matching your search. Try adjusting your filters.
+                        </Text>
+                    </View>
+                )}
             />
         </SafeAreaView>
     )
