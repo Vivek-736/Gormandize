@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Text, View } from 'react-native'
+import { FlatList, Text, View } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import useAppwrite from "@/lib/useAppwrite";
 import { getCategories, getMenu } from "@/lib/appwrite";
@@ -56,12 +56,6 @@ const Search = () => {
                         <SearchBar />
 
                         <Filter categories={categories! as any} />
-
-                        {loading && (
-                            <View className="flex-center py-4">
-                                <ActivityIndicator size="large" color="#FE8C00" />
-                            </View>
-                        )}
                     </View>
                 )}
                 ListEmptyComponent={() => !loading && <Text>No results</Text>}
