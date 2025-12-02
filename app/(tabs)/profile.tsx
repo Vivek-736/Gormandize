@@ -52,8 +52,10 @@ const Profile = () => {
                 contentContainerClassName='px-5 pb-10'
                 showsVerticalScrollIndicator={false}
             >
-                <View className='my-5'>
-                    <Text className='small-bold uppercase text-primary'>My Profile</Text>
+                <View className='my-5 mt-8 flex justify-center items-center'>
+                    <Text className='small-bold uppercase text-primary'>
+                        My Profile
+                    </Text>
                     <Text className='paragraph-semibold text-dark-100 mt-1'>
                         Manage your account
                     </Text>
@@ -61,11 +63,11 @@ const Profile = () => {
 
                 <View className='flex-center my-8'>
                     <View className='profile-avatar'>
-                        <Image 
-                            source={{ uri: user.avatar }}
-                            className='size-full rounded-full border-4 border-black bg-orange-600'
-                            resizeMode='cover'
-                        />
+                        <View className='size-full rounded-full bg-primary flex-center'>
+                            <Text className='text-6xl font-quicksand-bold text-white'>
+                                {user.name.charAt(0).toUpperCase()}
+                            </Text>
+                        </View>
                         <TouchableOpacity className='profile-edit'>
                             <Image 
                                 source={images.pencil}
