@@ -6,6 +6,7 @@ export const appwriteConfig = {
     projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
     platform: "com.vivek.gormandize",
     databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID || "692dc3a20017e9cc0cbd",
+    bucketId: process.env.EXPO_PUBLIC_APPWRITE_BUCKET_ID || "692eca62001af645979e",
     userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID || "user",
     categoriesCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID || "categories",
     menuCollectionId: process.env.EXPO_PUBLIC_APPWRITE_MENU_COLLECTION_ID || "menu",
@@ -135,6 +136,7 @@ export const getCurrentUser = async () => {
         }
 
         const user = currentUser.documents[0];
+        
         console.log("User retrieved successfully:", {
             name: user.name,
             email: user.email,
