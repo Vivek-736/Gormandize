@@ -4,6 +4,7 @@ import { createUser } from '@/lib/appwrite'
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
 import { Alert, Text, View } from 'react-native'
+import * as Sentry from '@sentry/react-native'
 
 const SignUp = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,7 +16,7 @@ const SignUp = () => {
         if(!name || !email || !password) return Alert.alert("Error", "Please enter valid name, email address and password");
 
         setIsSubmitting(true);
-        
+
         console.log("Starting signup process...");
 
         try {
@@ -37,6 +38,7 @@ const SignUp = () => {
         } catch (error: any) {
             console.error("Sign up error:", error);
             Alert.alert("Error", error?.message || "Failed to sign up. Please try again.");
+            Sentry.captureEvent(error);
         } finally {
             console.log("Signup process completed");
             setIsSubmitting(false);
