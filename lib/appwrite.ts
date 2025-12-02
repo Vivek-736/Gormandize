@@ -6,7 +6,8 @@ export const appwriteConfig = {
     projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
     platform: "com.vivek.gormandize",
     databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID || "692dc3a20017e9cc0cbd",
-    userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID || "user"
+    userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID || "user",
+    categoriesCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID || "categories"
 }
 
 export const client = new Client();
@@ -121,6 +122,7 @@ export const getCurrentUser = async () => {
         }
 
         console.log("Fetching user document from database...");
+        
         const currentUser = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
@@ -152,7 +154,7 @@ export const getCurrentUser = async () => {
         }
         
         console.log("No active session - user is not authenticated");
-        
+
         return null;
     }
 }
