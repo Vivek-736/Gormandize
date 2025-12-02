@@ -15,10 +15,10 @@ const SignUp = () => {
         if(!name || !email || !password) return Alert.alert("Error", "Please enter valid name, email address and password");
 
         setIsSubmitting(true);
+        
         console.log("Starting signup process...");
 
         try {
-            // Add timeout to prevent infinite loading
             const timeoutPromise = new Promise((_, reject) => 
                 setTimeout(() => reject(new Error("Request timed out. Please check your internet connection.")), 30000)
             );
@@ -30,9 +30,9 @@ const SignUp = () => {
             });
 
             await Promise.race([createUserPromise, timeoutPromise]);
-        
+
             console.log("User created successfully");
-            Alert.alert("Success", "Account created successfully!");
+
             router.replace('/');
         } catch (error: any) {
             console.error("Sign up error:", error);
